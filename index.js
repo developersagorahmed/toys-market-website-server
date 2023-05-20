@@ -39,7 +39,21 @@ async function run() {
 			res.send(result);
 		});
 
-		app.get("/allToys", async (req, res) => {
+		app.get("/alltoys/:category", async (req, res) => {
+			const category = req.params.category;
+			console.log(category);
+
+			if (
+				category == "Avengers" ||
+				category == "StarWars" ||
+				category == "Transformer"
+			) {
+				const result = await toysCollection
+					.find({ category: category })
+					.toArray();
+				console.log(result);
+				return res.send(result);
+			}
 			const result = await toysCollection.find({}).toArray();
 			res.send(result);
 		});
