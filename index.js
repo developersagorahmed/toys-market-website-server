@@ -50,11 +50,15 @@ async function run() {
 			) {
 				const result = await toysCollection
 					.find({ category: category })
+
 					.toArray();
 				console.log(result);
 				return res.send(result);
 			}
-			const result = await toysCollection.find({}).toArray();
+			const result = await toysCollection
+				.find({})
+
+				.toArray();
 			res.send(result);
 		});
 
@@ -65,12 +69,20 @@ async function run() {
 			const result = await toysCollection.findOne(query);
 			res.send(result);
 		});
-		// app.get("/details/:id", async (req, res) => {
-		// 	const id = req.params.id;
-		// 	const query = { _id: new ObjectId(id) };
-		// 	const result = toysCollection.findOne(query);
-		// 	res.send(result);
-		// });
+		app.get("/myToys/:email", async (req, res) => {
+			console.log(req.params.email);
+			const result = await toysCollection
+				.find({ sellerEmail: req.params.email })
+				.toArray();
+			res.send(result);
+		});
+
+		app.delete("/myToys/:id", async (req, res) => {
+			const id = req.params.id;
+			const query = { _id: new ObjectId(id) };
+			const result = await toysCollection.deleteOne(query);
+			res.send(result);
+		});
 		// Send a ping to confirm a successful connection
 		await client.db("admin").command({ ping: 1 });
 		console.log(
