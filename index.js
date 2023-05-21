@@ -76,6 +76,10 @@ async function run() {
 				.toArray();
 			res.send(result);
 		});
+		app.get("/allToys", async (req, res) => {
+			const result = await toysCollection.find({}).toArray();
+			res.send(result);
+		});
 
 		app.get("/myToys/updateToy/:id", async (req, res) => {
 			const id = req.params.id;
