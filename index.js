@@ -15,28 +15,26 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.7is7xhq.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-	serverApi: {
-		version: ServerApiVersion.v1,
-		strict: true,
-		deprecationErrors: true,
-	},
-});
+const client = new MongoClient(
+	uri,
+	{ useUnifiedTopology: true },
+	{ useNewUrlParser: true },
+	{ connectTimeoutMS: 30000 },
+	{ keepAlive: 1 }
+);
 
 async function run() {
 	try {
 		// Connect the client to the server	(optional starting in v4.7)
-		await client.connect();
 
 		const db = client.db("toysPortal");
 		const toysCollection = db.collection("toys");
 
-		const indexKeys = { toyName: 1, category: 1 };
-		const indexOptions = { name: "toyNameCategory" };
-
-		const result = await toysCollection.createIndex(indexKeys, indexOptions);
-
 		app.get("/toySearch/:text", async (req, res) => {
+			const indexKeys = { toyName: 1, category: 1 };
+			const indexOptions = { name: "toyNameCategory" };
+
+			const result2 = await toysCollection.createIndex(indexKeys, indexOptions);
 			const searchText = req.params.text;
 			const result = await toysCollection
 				.find({
